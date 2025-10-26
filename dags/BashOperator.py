@@ -14,7 +14,7 @@ dag = DAG(
     'exemple_bash',
     default_args=default_args,
     description='DAG utilisant des opérateurs Bash',
-    schedule_interval='0 0 * * *',
+    schedule='0 0 * * *',
     catchup=False,
 )
 
