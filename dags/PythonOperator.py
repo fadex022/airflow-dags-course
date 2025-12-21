@@ -29,29 +29,30 @@ default_args = {
     'retry_delay': timedelta(minutes=2),
 }
 
-with DAG(
-        dag_id='python_operator_demo',
-        default_args=default_args,
-        schedule_interval='@daily',
-        catchup=False
-) as dag:
+dag = DAG(
+    'python_operator_demo',
+    default_args=default_args,
+    description='DAG utilisant des opérateurs Bash',
+    schedule='0 0 * * *',
+    catchup=False,
+)
 
-    # 3. Create the tasks
-    t1 = PythonOperator(
-        task_id='generate_number',
-        python_callable=get_random_number
-    )
+# 3. Create the tasks
+t1 = PythonOperator(
+    task_id='generate_number',
+    python_callable=get_random_number
+)
 
-    t2 = PythonOperator(
-        task_id='process_calculated_data',
-        python_callable=process_data
-    )
+t2 = PythonOperator(
+    task_id='process_calculated_data',
+    python_callable=process_data
+)
 
-    t3 = PythonOperator(
-        task_id='log_airflow_context',
-        python_callable=print_context,
-        provide_context=True # Modern Airflow (2.0+) does this automatically
-    )
+t3 = PythonOperator(
+    task_id='log_airflow_context',
+    python_callable=print_context,
+    provide_context=True # Modern Airflow (2.0+) does this automatically
+)
 
-    # 4. Set dependencies
-    t1 >> t2 >> t3
+# 4. Set dependencies
+t1 >> t2 >> t3
